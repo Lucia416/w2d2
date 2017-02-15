@@ -3,9 +3,9 @@
     <title>TinyApp</title>
   </head>
   <body>
-    <h1>
+
       <% include ./partials/_headers %>
-    </h1>
+
     <p><%= shortURL %> ----> <%= longURL %></p>
         <form method="POST" action="/urls/<%= shortURL %>">
           <input type="text" name="newLong" placeholder="<%= longURL %>">

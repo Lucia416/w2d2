@@ -1,1 +1,12 @@
 <h1>THE MAGIC HAPPENS HERE</h1>
+<form action= "/login" method="post">
+<input type="text" name="username">
+<input type= "submit" value="sign in!">
+</form>
+
+<% if (typeof(username) != 'undefined') { %>
+  <%= username %>
+  <form action = "/logout" method="post">
+    <input type="submit" value= "logOUT">
+<% } %>
+</form>

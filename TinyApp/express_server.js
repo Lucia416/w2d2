@@ -3,6 +3,7 @@
 var express = require('express');
 var app = express();
 var PORT = process.env.PORT || 8080;
+var cookieParser = require('cookie-parser')
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
@@ -15,8 +16,10 @@ var urlDatabase = {
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.use(cookieParser());
+
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase };
+  let templateVars = { urls: urlDatabase, username: req.cookies.username };
   res.render("urls_index", templateVars);
 });
 
@@ -27,7 +30,8 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
-    longURL:  urlDatabase[req.params.id]
+    longURL:  urlDatabase[req.params.id],
+    username: req.cookies.username
   };
   res.render("urls_show", templateVars);
 });
@@ -40,6 +44,10 @@ app.post("/urls", (req, res) => {
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
+app.post('/login', (req, res)=> {
+  res.cookie('username',req.body.username);
+  res.redirect("/");
+})
 //app.post("/urls")
 app.post("/urls/:id/delete", (req,res) =>{
   delete urlDatabase[req.params.id]
@@ -50,7 +58,10 @@ app.post("/urls/:id", (req,res) =>{
   urlDatabase[req.params.id] = req.body.newLong;
   res.redirect('/urls')
 })
-
+app.post('/logout', (req, res)=> {
+res.clearCookie('username', req.body.username);
+  res.redirect("/");
+})
 // app.get("/urls/:id", (req,res) =>{
 // //urlDatabase[req.body.newLong] = req.params.newLong;
 //
