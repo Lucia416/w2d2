@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+  <h1>
+    <% include ./partials/_headers %>
+  </h1>
+  <ul>
+    <% for(var k in urls) { %>
+    <li><%= k %> => <%= urls[k] %>
+    <a href="/urls/<%= k %>">Edit</a>
+      <form method="POST" action="/urls/<%= k %>/delete">
+        <input type= "submit" value="DELETE">
+      </form></li>
+<% } %>
+</ul>
+<p> Is this what you wanted?<p>
+<a href="http://localhost:8080/urls/new">Edit</a>
+
+</body>
+</html>
