@@ -1,12 +1,16 @@
 <h1>THE MAGIC HAPPENS HERE</h1>
-<form action= "/login" method="post">
-<input type="text" name="username">
-<input type= "submit" value="sign in!">
-</form>
+<!-- <form action= "/login" method="post">
+  <input type="text" name="username">
+  <input type= "submit" value="sign in!">
+</form> -->
 
-<% if (typeof(username) != 'undefined') { %>
-  <%= username %>
+ <% if (user) { %>
+  <%= user.email %>
   <form action = "/logout" method="post">
     <input type="submit" value= "logOUT">
-<% } %>
-</form>
+ <% } %>
+  </form>
+
+  <a href="http://localhost:8080/register">Register here!</a>
+
+  <a href="http://localhost:8080/login">Login</a>
