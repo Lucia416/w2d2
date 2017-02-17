@@ -2,14 +2,15 @@
   <head>
     <title>TinyApp</title>
   </head>
-  <body>
-
+    <body>
+    </ul>
       <% include ./partials/_headers %>
 
-    <p><%= shortURL %> ----> <%= longURL %></p>
+      <p><%= shortURL %> ----> <%= longURL %></p>
         <form method="POST" action="/urls/<%= shortURL %>">
           <input type="text" name="newLong" placeholder="<%= longURL %>">
           <input type= "submit" value="go go go">
-  </ul>
-  </body>
+        </form>
+    </ul>
+    </body>
 </html>
