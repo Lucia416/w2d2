@@ -13,18 +13,34 @@
     </h1>
 
       <ul>
-        <% for(var k in urls) { %>
-        <li><%= k %> => <%= urls[k] %>
-
-          <a href="/urls/<%= k %>">Edit</a>
-
-            <form method="POST" action="/urls/<%= k %>/delete">
-              <input type= "submit" value="DELETE">
-            </form>
-
+        <% for(var shortURL in urls) { %>
+        <li>
+          <%= shortURL %> => <%= urls[shortURL].longURL %>
+           <% if (user && user["id"] == urls[shortURL]["userID"]) { %>
+           <form method="POST" action="/urls/<%= shortURL %>/delete">
+             <input type= "submit" value="DELETE">
+           </form>
+           <% } %>
+           <a href="/urls/:id">Edit</a>
+         <% } %>
         </li>
-        <% } %>
-        </ul>
+         </ul>
+
+
+    <!--
+    for(var k in urls(aa the urls)){
+          if (yourURLList.includes(k)){
+            edit and delete options
+          }else{
+            no options
+          }
+
+        }
+
+    }
+  }
+    -->
+
 
     <p> Is this what you wanted?<p>
 
