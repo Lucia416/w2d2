@@ -50,16 +50,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(cookieSession({
   name: 'session',
-  keys: [/* secret keys */],
+  keys: ['key1', 'key2'],
 
-  // Cookie Options
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-    urls: urlsForUser(req.cookies.userId),
-    user: users[req.cookies.userId]
+    urls: urlsForUser(req.session.userId),
+    user: users[req.session.userId]
 // set in register
   };
 res.render("urls_index", templateVars);
@@ -67,9 +65,9 @@ res.render("urls_index", templateVars);
 
 app.get("/urls/new", (req, res) => {
 
-  if (req.cookies['userID']){
+  if (req.session['userID']){
     let templateVars = {
-      user: users[req.cookies.userId]
+      user: users[req.session.userId]
     };
     res.render("urls_new", templateVars);
   }
@@ -80,7 +78,7 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id],
-    user: users[req.cookies.userId]
+    user: users[req.session.userId]
   };
   res.render("urls_show", templateVars);
 });
@@ -99,7 +97,7 @@ app.post("/urls", (req, res) => {
   var shortID = generateRandomString();
   urlDatabase[shortID] = {
       key: req.bodyURL,  // LONG URL
-      usersID:users[req.cookies.userId]
+      usersID:users[req.session.userId]
   }
   console.log(urlDatabase);
   res.send("Alright!");
@@ -114,7 +112,7 @@ app.post('/login', (req, res)=> {
   const match = bcrypt.hashSync(password, users[userID].password);
  for (let k in users) {
     if (users[k].email === req.body.email &&(match === true)){
-    res.cookie('userId', k);
+    req.session.userId = userID;
     return res.redirect("/urls");
   } console.log()
   };
@@ -130,7 +128,7 @@ app.post("/urls/:id/delete", (req, res) =>{
 
 
 app.post("/urls/", (req,res) =>{
-  const user = users[req.cookies.userId];
+  const user = users[req.session.userId];
   const urlEntry = urlDatabase[req.params.id];
 
   if (user.id === urlEntry.userID) {
@@ -139,7 +137,7 @@ app.post("/urls/", (req,res) =>{
 })
 
 app.post('/logout', (req, res)=> {
-  res.clearCookie('userId', req.body.userId);
+  req.session = null;
   res.redirect("/");
 })
 
@@ -170,7 +168,7 @@ app.post("/register",(req,res) => {
     email:email,
     password:password
   }
-  res.cookie('userId', random)
+  req.cookie.userId = userID;
   console.log(hashed_password);
   res.redirect("/urls")
 });
