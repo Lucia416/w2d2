@@ -46,7 +46,7 @@ const users = {
 }
 
 function urlsForUser(id){
-  userUrls = {}
+const userUrls = {}
 for (shortURL in urlDatabase){
   if( id === urlDatabase[shortURL].userID){
     userUrls[shortURL] = urlDatabase[shortURL]
@@ -84,7 +84,7 @@ app.post("/urls", (req, res) => {
       longURL: req.body.longURL,
       userID:req.session.userId
   }
-  res.redirect("/urls")
+  res.redirect("/urls"+"/"+shortID)
 });
 
 
@@ -123,7 +123,7 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:id/update", (req, res) => {
- let longURL = req.body.longURL;
+ let longURL = req.body.newLong;
  urlDatabase[req.params.id].longURL = longURL;
  res.redirect("/urls");
 });
@@ -152,7 +152,7 @@ app.post('/login', (req, res)=> {
 
 app.post('/logout', (req, res)=> {
   req.session = null;
-  res.redirect("/");
+  res.redirect("/urls");
 })
 
 // app.post("/urls/", (req,res) =>{
