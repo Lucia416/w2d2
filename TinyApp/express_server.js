@@ -91,7 +91,7 @@ app.post("/urls", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[req.params.id].longURL,
     user: users[req.session.userId]
   };
   res.render("urls_show", templateVars);
@@ -120,6 +120,12 @@ app.get("/u/:shortURL", (req, res) => {
 
  let longURL = urlDatabase[req.params.shortURL].longURL;
  res.redirect(longURL);
+});
+
+app.post("/urls/:id/update", (req, res) => {
+ let longURL = req.body.longURL;
+ urlDatabase[req.params.id].longURL = longURL;
+ res.redirect("/urls");
 });
 
 app.get("/login", (req, res) => {
