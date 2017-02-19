@@ -103,7 +103,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
- urlDatabase[req.params.id]= req.body.newLong;
+ urlDatabase[req.params.id].longURL= req.body.newLong;
  res.redirect(`/urls/${req.params.id}`)
 });
 
@@ -117,7 +117,8 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
- let longURL = urlDatabase[req.params.shortURL].newLong;
+
+ let longURL = urlDatabase[req.params.shortURL].longURL;
  res.redirect(longURL);
 });
 
