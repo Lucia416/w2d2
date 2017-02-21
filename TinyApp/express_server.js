@@ -151,17 +151,14 @@ app.get("/u/:shortURL", (req, res) => {
  }
 });
 
-
-app.post("/urls/:id/update", (req, res) => {
-  let log = req.session.userId
-  let data = urlDatabase[req.params.id]
-
- // RB* --> What if id does not exist, or user is not logged in, or user does not own url
- //I don't understand this point, because this page can be accessed only if the user is logged in!
- let longURL = req.body.newLong;
- urlDatabase[req.params.id].longURL = longURL;
- res.redirect("/urls");
-});
+//
+// app.post("/urls/:id/update", (req, res) => {
+//   let log = req.session.userId
+//   let data = urlDatabase[req.params.id]
+//  let longURL = req.body.newLong;
+//  urlDatabase[req.params.id].longURL = longURL;
+//  res.redirect("/urls");
+// });
 
 app.get("/login", (req, res) => {
   let templateVars = {
