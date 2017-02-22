@@ -35,6 +35,16 @@ function generateRandomString() {
 }
 generateRandomString();
 
+function urlsForUser(id) {
+  const userUrls = {}
+  for (shortURL in urlDatabase){
+    if( id === urlDatabase[shortURL].userID){
+      return userUrls[shortURL] = urlDatabase[shortURL]
+    }
+  }
+  return userUrls;
+}
+
 var urlDatabase = {
   "lucy3d": {
     longURL: "http://www.lucia3d.com",
@@ -59,17 +69,6 @@ const users = {
     password: "123"
   }
 }
-
-function urlsForUser(id) {
-  const userUrls = {}
-  for (shortURL in urlDatabase){
-    if( id === urlDatabase[shortURL].userID){
-      return userUrls[shortURL] = urlDatabase[shortURL]
-    }
-  }
-  return userUrls;
-}
-
 
 app.get("/urls", (req, res) => {
   const templateVars = {
@@ -101,11 +100,15 @@ app.post("/urls", (req, res) => {
       longURL: req.body.longURL,
       userID: req.session.userId
   }
-  res.redirect("/urls"+"/"+shortID)
+    if (!req.body.longURL){
+      res.status(400).send("No URL submitted")
+    } else{
+    res.redirect("/urls"+"/"+shortID)
+  }
 });
 
 
-app.get("/urls/:id", (req, res) {
+app.get("/urls/:id", (req, res) => {
   let log = req.session.userId
   let data = urlDatabase[req.params.id]
    if((!data)|| (!log)) {
@@ -114,7 +117,7 @@ app.get("/urls/:id", (req, res) {
     let templateVars = {
       shortURL: req.params.id,
       longURL: urlDatabase[req.params.id].longURL,
-      user: users[session.userId]
+      user: users[req.session.userId]
     };
   res.render("urls_show", templateVars);
  }
@@ -151,22 +154,20 @@ app.get("/u/:shortURL", (req, res) => {
  }
 });
 
-//
-// app.post("/urls/:id/update", (req, res) => {
-//   let log = req.session.userId
-//   let data = urlDatabase[req.params.id]
-//  let longURL = req.body.newLong;
-//  urlDatabase[req.params.id].longURL = longURL;
-//  res.redirect("/urls");
-// });
+
+ app.post("/urls/:id/update", (req, res) => {
+  //  let data = urlDatabase[req.params.id]
+  //  let longURL = req.body.longURL;
+  //  urlDatabase[req.params.id].longURL = longURL;
+  res.redirect("/urls");
+ });
 
 app.get("/login", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
     user: users[req.session.userId]
-    userID: req.session.userId
   };
-  if (userID){
+  if (req.session.userId){
  res.render("urls_index", templateVars);
  } else {
     res.render("urls_login");
@@ -177,7 +178,6 @@ app.post('/login', (req, res)=> {
 
   let email = req.body.email;
   let password = req.body.password;
-
   if(email && password) {
     const hashed_password = bcrypt.hashSync(password, 10)
      for (var userID in users) {
@@ -197,9 +197,13 @@ app.post('/logout', (req, res)=> {
 })
 
 app.get("/register", (req, res) => {
+  let templateVars = {
+    urls: urlDatabase,
+    user: users[req.session.userId]
+  }
 
   if(req.session.userId){
-    res.redirect("/urls");
+    res.redirect("/urls", templateVars);
   }else{
     res.render("urls_register");
  }
